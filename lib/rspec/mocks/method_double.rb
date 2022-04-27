@@ -66,7 +66,7 @@ module RSpec
           key = T::Private::Methods.send(:method_owner_and_name_to_key, self, method_name)
           sig = T::Private::Methods.send(:signature_for_key, key)
           if sig
-            T::Private::Methods::CallValidation.rewrap_method(
+            T::Private::Methods::CallValidation.wrap_method_if_needed(
               self,
               sig,
               instance_method(method_name)
