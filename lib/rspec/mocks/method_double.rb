@@ -63,6 +63,15 @@ module RSpec
           define_method(method_name) do |*args, &block|
             method_double.proxy_method_invoked(self, *args, &block)
           end
+          key = T::Private::Methods.send(:method_owner_and_name_to_key, self, method_name)
+          sig = T::Private::Methods.send(:signature_for_key, key)
+          if sig
+            T::Private::Methods::CallValidation.rewrap_method(
+              self,
+              sig,
+              instance_method(method_name)
+            )
+          end
           ruby2_keywords(method_name) if Module.private_method_defined?(:ruby2_keywords)
           __send__(visibility, method_name)
         end
