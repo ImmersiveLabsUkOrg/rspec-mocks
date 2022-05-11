@@ -63,19 +63,17 @@ module RSpec
           define_method(method_name) do |*args, &block|
             method_double.proxy_method_invoked(self, *args, &block)
           end
-          key = T::Private::Methods.send(:method_owner_and_name_to_key, self, method_name)
-          sig = T::Private::Methods.send(:signature_for_key, key)
-          if sig
-            T::Private::Methods::CallValidation.wrap_method_if_needed(
-              self,
-              sig,
-              instance_method(method_name)
-            )
-          end
           # This can't be `if respond_to?(:ruby2_keywords, true)`,
           # see https://github.com/rspec/rspec-mocks/pull/1385#issuecomment-755340298
           ruby2_keywords(method_name) if Module.private_method_defined?(:ruby2_keywords)
           __send__(visibility, method_name)
+
+          signature = T::Utils.signature_for_method(instance_method(method_name))
+          if signature
+            T::Utils.wrap_method_with_call_validation_if_needed(
+              self, signature, instance_method(method_name)
+            )
+          end
         end
 
         @method_is_proxied = true
