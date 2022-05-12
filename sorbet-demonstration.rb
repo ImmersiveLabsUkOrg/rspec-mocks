@@ -47,7 +47,7 @@ RSpec.describe Blog do
 
     expect { blog.comment_ids }.to raise_error(
       TypeError,
-      /Parameter 'blog_id': Expected type Array[Integer], got type Array[String] with value ["2"]/
+      /Parameter 'blog_id': Expected type Array\[Integer\], got type Array\[String\] with value \["2"\]/
     )
   end
 end

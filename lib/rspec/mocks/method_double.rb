@@ -69,7 +69,16 @@ module RSpec
           __send__(visibility, method_name)
 
           method = instance_method(method_name)
+
+          # TODO: Just calling signature_for_method without calling wrap_method_... affects the outcome of the tests
+          # only when the bad parameter test runs before the bad return test, and I am not sure why.
+          # The error we get is:
+          #   (DiscussionDomain (class)).comment_ids_for_blog("1")
+          #     expected: 1 time with arguments: ("1")
+          #     received: 0 times
+          # So presumably its that the test's mocking proxy is not being set up correctly.
           signature = T::Utils.signature_for_method(method)
+
           if signature
             T::Utils.wrap_method_with_call_validation_if_needed(self, signature, method)
           end
