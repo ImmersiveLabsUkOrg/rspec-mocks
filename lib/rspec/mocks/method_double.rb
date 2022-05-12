@@ -68,11 +68,10 @@ module RSpec
           ruby2_keywords(method_name) if Module.private_method_defined?(:ruby2_keywords)
           __send__(visibility, method_name)
 
-          signature = T::Utils.signature_for_method(instance_method(method_name))
+          method = instance_method(method_name)
+          signature = T::Utils.signature_for_method(method)
           if signature
-            T::Utils.wrap_method_with_call_validation_if_needed(
-              self, signature, instance_method(method_name)
-            )
+            T::Utils.wrap_method_with_call_validation_if_needed(self, signature, method)
           end
         end
 

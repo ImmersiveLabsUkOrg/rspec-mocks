@@ -32,7 +32,7 @@ RSpec.describe Blog do
   it "#comment_ids raises Sorbet error when mock has bad parameter type" do
     blog = Blog.new("1")
 
-    expect(DiscussionDomain).to receive(:comment_ids_for_blog).with("1").and_return([2])
+    expect(DiscussionDomain).to receive(:comment_ids_for_blog).once.with("1").and_return([2])
 
     expect { blog.comment_ids }.to raise_error(
       TypeError,
@@ -43,7 +43,7 @@ RSpec.describe Blog do
   it "#comment_ids raises Sorbet error when mock has bad return type" do
     blog = Blog.new(1)
 
-    expect(DiscussionDomain).to receive(:comment_ids_for_blog).with(1).and_return(["2"])
+    expect(DiscussionDomain).to receive(:comment_ids_for_blog).once.with(1).and_return(["2"])
 
     expect { blog.comment_ids }.to raise_error(
       TypeError,
