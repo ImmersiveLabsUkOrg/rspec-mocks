@@ -29,20 +29,26 @@ class DiscussionDomain
 end
 
 RSpec.describe Blog do
-  it "delegates comment_ids to DiscussionDomain" do
+  it "#comment_ids raises Sorbet error when mock has bad parameter type" do
     blog = Blog.new("1")
-    # I want this to raise, via sorbet-runtime
-    # Parameter 'blog_id': Expected type Integer, got type String with value "1"
+
     expect(DiscussionDomain).to receive(:comment_ids_for_blog).with("1").and_return([2])
-    blog.comment_ids
+
+    expect { blog.comment_ids }.to raise_error(
+      TypeError,
+      /Parameter 'blog_id': Expected type Integer, got type String with value "1"/
+    )
   end
 
-  it "delegates comment_ids to DiscussionDomain 2" do
+  it "#comment_ids raises Sorbet error when mock has bad return type" do
     blog = Blog.new(1)
-    # I want this to raise, via sorbet-runtime
-    # Return value: Expected type Array[Integer], got type Array[String] with value ["2"]
+
     expect(DiscussionDomain).to receive(:comment_ids_for_blog).with(1).and_return(["2"])
-    blog.comment_ids
+
+    expect { blog.comment_ids }.to raise_error(
+      TypeError,
+      /Parameter 'blog_id': Expected type Array[Integer], got type Array[String] with value ["2"]/
+    )
   end
 end
 
